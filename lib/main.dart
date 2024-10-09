@@ -10,6 +10,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  static final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
