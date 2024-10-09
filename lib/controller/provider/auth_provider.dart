@@ -5,6 +5,7 @@ import 'package:expense_tracker/utils/snackbar_utils.dart';
 import 'package:expense_tracker/view/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthProvider with ChangeNotifier {
   Future<void> login(
@@ -25,7 +26,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> signUp(
-      String email, String password, BuildContext context,String name) async {
+      String email, String password, BuildContext context, String name) async {
     final db = FirebaseFirestore.instance.collection('user');
     try {
       await FirebaseAuth.instance
@@ -35,5 +36,15 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       SnackbarUtils.showMessage('Registration Failed');
     }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+    final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

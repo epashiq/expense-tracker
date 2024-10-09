@@ -1,4 +1,5 @@
 import 'package:expense_tracker/controller/provider/auth_provider.dart';
+import 'package:expense_tracker/view/pages/home_page.dart';
 import 'package:expense_tracker/view/pages/sign_up_page.dart';
 import 'package:expense_tracker/view/widgets/submit_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +85,14 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                authProvider.signInWithGoogle();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomePage(),
+                    ));
+              },
               icon: Image.network(
                 'https://www.freepnglogos.com/uploads/new-google-logo-transparent--14.png',
                 height: 24.0,
