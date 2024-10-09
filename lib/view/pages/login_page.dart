@@ -1,3 +1,4 @@
+import 'package:expense_tracker/view/pages/sign_up_page.dart';
 import 'package:expense_tracker/view/widgets/submit_button_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -107,7 +108,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/register');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpPage(),
+                        ));
                   },
                   child: const Text(
                     "Register",

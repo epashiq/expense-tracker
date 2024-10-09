@@ -5,8 +5,10 @@ class SubmitButtonWidget extends StatelessWidget {
   final void Function() onTap;
   final TextEditingController? emailController;
   final TextEditingController? passController;
+  final TextEditingController? nameController;
   const SubmitButtonWidget(
       {super.key,
+      this.nameController,
       required this.btnText,
       required this.onTap,
       required this.emailController,
