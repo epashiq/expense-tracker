@@ -1,5 +1,7 @@
+import 'package:expense_tracker/controller/provider/add_expenses_provider.dart';
 import 'package:expense_tracker/view/widgets/add_button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,6 +15,7 @@ class _HomePageState extends State<HomePage> {
   String? categoryValue;
   @override
   Widget build(BuildContext context) {
+    final addExpenseProvider = Provider.of<AddExpensesProvider>(context);
     return Scaffold(
       backgroundColor: const Color(0XFFfafafaff),
       appBar: AppBar(
@@ -32,7 +35,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               hint: const Text('Select Type'),
-              value: typeValue,
+              value: addExpenseProvider.typeValue,
               items: ['Groceries', 'Rent']
                   .map<DropdownMenuItem<String>>(
                       (String value) => DropdownMenuItem(
@@ -41,7 +44,10 @@ class _HomePageState extends State<HomePage> {
                           ))
                   .toList(),
               onChanged: (String? value) {
-                typeValue = value;
+                setState(() {
+                  addExpenseProvider.typeValue;
+                  typeValue = value;
+                });
               },
             ),
             const SizedBox(
@@ -56,6 +62,7 @@ class _HomePageState extends State<HomePage> {
                     borderSide: BorderSide.none,
                   ),
                 ),
+                value: addExpenseProvider.categoryValue,
                 hint: const Text('Select Category'),
                 items: ['Food', 'Groceries', 'Entertainment']
                     .map<DropdownMenuItem<String>>(
@@ -65,12 +72,16 @@ class _HomePageState extends State<HomePage> {
                             ))
                     .toList(),
                 onChanged: (String? value) {
-                  categoryValue = value;
+                  setState(() {
+                    addExpenseProvider.categoryValue;
+                    categoryValue = value;
+                  });
                 }),
             const SizedBox(
               height: 20,
             ),
             TextFormField(
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: const Color(0XFFffffffff),
@@ -86,6 +97,7 @@ class _HomePageState extends State<HomePage> {
               height: 20,
             ),
             TextFormField(
+              controller: addExpenseProvider.dateController,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: const Color(0XFFffffffff),
@@ -96,6 +108,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 prefixIcon: const Icon(Icons.calendar_month),
               ),
+              onTap: () {
+                addExpenseProvider.setDate(context);
+              },
             ),
             const SizedBox(
               height: 20,

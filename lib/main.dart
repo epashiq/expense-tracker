@@ -1,3 +1,4 @@
+import 'package:expense_tracker/controller/provider/add_expenses_provider.dart';
 import 'package:expense_tracker/controller/provider/auth_provider.dart';
 import 'package:expense_tracker/firebase_options.dart';
 import 'package:expense_tracker/view/pages/login_page.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => AddExpensesProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
