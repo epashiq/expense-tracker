@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/model/expense_model.dart';
@@ -91,3 +90,85 @@ class AddExpensesProvider with ChangeNotifier {
     }
   }
 }
+
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:flutter/material.dart';
+// import 'package:intl/intl.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+
+// class AddExpensesProvider with ChangeNotifier {
+//   List<Map<String, dynamic>> _expenses = [];
+//   TextEditingController amountController = TextEditingController();
+//   TextEditingController dateController = TextEditingController();
+//   String? typeValue;
+//   String? categoryValue;
+
+//   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+//   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+//   List<Map<String, dynamic>> get expenses => _expenses;
+//   final DateFormat dateFormatter = DateFormat('dd-MM-yyyy');
+//   final DateFormat firestoreDateFormatter = DateFormat('yyyy-MM-dd');
+//   Future<void> setDate(BuildContext context) async {
+//     final DateTime currentDate = DateTime.now();
+//     final DateTime? selectedDate = await showDatePicker(
+//       context: context,
+//       firstDate: DateTime(currentDate.year - 10),
+//       lastDate: currentDate,
+//       initialDate: currentDate,
+//     );
+//     if (selectedDate != null) {
+//       dateController.text = dateFormatter.format(selectedDate);
+//     }
+//     notifyListeners();
+//   }
+
+//   Future<void> addExpense() async {
+//     if (_auth.currentUser != null) {
+//       // Add expense to Firestore
+//       await _firestore
+//           .collection('user')
+//           .doc(_auth.currentUser!.uid)
+//           .collection('Expense')
+//           .add({
+//         'type': typeValue,
+//         'category': categoryValue,
+//         'amount': double.tryParse(amountController.text) ?? 0.0,
+//         'date': dateController.text,
+//       });
+
+//       // Local cache can also be updated here if needed
+//       _expenses.add({
+//         'type': typeValue,
+//         'category': categoryValue,
+//         'amount': double.tryParse(amountController.text) ?? 0.0,
+//         'date': dateController.text,
+//       });
+
+//       notifyListeners(); // Notify listeners to update the UI
+//     }
+//   }
+
+//   Future<void> retrieveExpenses() async {
+//     if (_auth.currentUser != null) {
+//       QuerySnapshot querySnapshot = await _firestore
+//           .collection('user')
+//           .doc(_auth.currentUser!.uid)
+//           .collection('Expense')
+//           .get();
+
+//       _expenses = querySnapshot.docs
+//           .map((doc) => doc.data() as Map<String, dynamic>)
+//           .toList();
+//       notifyListeners(); // Notify listeners to update the UI
+//     }
+//   }
+
+//   void clearFields() {
+//     dateController.clear();
+//     amountController.clear();
+//     typeValue = null;
+//     categoryValue = null;
+//     notifyListeners();
+//   }
+// }
