@@ -89,6 +89,16 @@ class AddExpensesProvider with ChangeNotifier {
       throw Exception(e.toString());
     }
   }
+
+  Future<void> deleteExpense(BuildContext context, String documentId) async {
+    try {
+      FirebaseFirestore.instance.collection('Expense').doc(documentId).delete();
+      SnackbarUtils.showMessage('expense deleted');
+    } catch (e) {
+      SnackbarUtils.showMessage('expense deleted failed');
+    }
+    notifyListeners();
+  }
 }
 
 // import 'package:cloud_firestore/cloud_firestore.dart';

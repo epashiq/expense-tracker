@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/controller/provider/add_expenses_provider.dart';
 import 'package:expense_tracker/view/pages/dash_board_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ShowExpensePage extends StatefulWidget {
   const ShowExpensePage({super.key});
@@ -12,6 +14,8 @@ class ShowExpensePage extends StatefulWidget {
 class _MyWidgetState extends State<ShowExpensePage> {
   @override
   Widget build(BuildContext context) {
+    final addExpenseProvider = Provider.of<AddExpensesProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Expenses'),
@@ -25,7 +29,7 @@ class _MyWidgetState extends State<ShowExpensePage> {
                       builder: (context) => const DashboardPage(),
                     ));
               },
-              icon: Icon(Icons.dashboard))
+              icon: const Icon(Icons.dashboard))
         ],
       ),
       body: Padding(
@@ -93,6 +97,29 @@ class _MyWidgetState extends State<ShowExpensePage> {
                             'Date: ${exp['date'] ?? 'N/A'}',
                             style: const TextStyle(fontSize: 16),
                           ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: PopupMenuButton<String>(
+                              icon: const Icon(Icons.more_vert),
+                              onSelected: (value) {
+                                if (value == 'update') {
+                                } else if (value == 'delete') {
+                                  addExpenseProvider.deleteExpense(
+                                      context, snapshot.data!.docs[index].id);
+                                }
+                              },
+                              itemBuilder: (context) {
+                                return [
+                                  const PopupMenuItem<String>(
+                                    value: 'update',
+                                    child: Text('Update'),
+                                  ),
+                                  const PopupMenuItem<String>(
+                                      value: 'delete', child: Text('Delete')),
+                                ];
+                              },
+                            ),
+                          )
                         ],
                       ),
                     ),
