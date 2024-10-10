@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
                   .toList(),
               onChanged: (String? value) {
                 setState(() {
-                  addExpenseProvider.typeValue;
+                  addExpenseProvider.typeValue = value;
                   typeValue = value;
                 });
               },
@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                     .toList(),
                 onChanged: (String? value) {
                   setState(() {
-                    addExpenseProvider.categoryValue;
+                    addExpenseProvider.categoryValue = value;
                     categoryValue = value;
                   });
                 }),
@@ -81,6 +81,7 @@ class _HomePageState extends State<HomePage> {
               height: 20,
             ),
             TextFormField(
+              controller: addExpenseProvider.amountController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 filled: true,
@@ -117,7 +118,10 @@ class _HomePageState extends State<HomePage> {
             ),
             AddButtonWidget(
               btnText: 'Add',
-              onTap: () {},
+              onTap: () {
+                addExpenseProvider.addExpense();
+                addExpenseProvider.clearFields();
+              },
               width: MediaQuery.of(context).size.width,
             )
           ],
