@@ -1,4 +1,5 @@
 import 'package:expense_tracker/controller/provider/add_expenses_provider.dart';
+import 'package:expense_tracker/view/pages/show_expense_page.dart';
 import 'package:expense_tracker/view/widgets/add_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -121,6 +122,11 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 addExpenseProvider.addExpense();
                 addExpenseProvider.clearFields();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ShowExpensePage(),
+                    ));
               },
               width: MediaQuery.of(context).size.width,
             )
