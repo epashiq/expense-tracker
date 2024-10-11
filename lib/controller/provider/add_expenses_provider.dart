@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/model/expense_model.dart';
 import 'package:expense_tracker/utils/snackbar_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -45,9 +46,13 @@ class AddExpensesProvider with ChangeNotifier {
 
       final String formattedDate = firestoreDateFormatter.format(date);
 
-      final String documentId = UniqueKey().toString();
+      // final String documentId = UniqueKey().toString();
 
-      await db.collection('Expense').doc(documentId).set({
+      await db
+          .collection('user')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection('Expense')
+          .add({
         'type': typeValue,
         'category': categoryValue,
         'amount': amount,
@@ -98,6 +103,27 @@ class AddExpensesProvider with ChangeNotifier {
       SnackbarUtils.showMessage('expense deleted failed');
     }
     notifyListeners();
+  }
+
+  Future<void> editExpense() async {
+    final double amount = double.parse(amountController.text);
+
+    final DateTime date = dateFormatter.parse(dateController.text);
+
+    final String formattedDate = firestoreDateFormatter.format(date);
+
+    final String documentId = UniqueKey().toString();
+    try {
+      FirebaseFirestore.instance.collection('Expense').doc(documentId).update({
+        'type': typeValue,
+        'category': categoryValue,
+        'amount': amount,
+        'date': formattedDate,
+      });
+      SnackbarUtils.showMessage('Employee updated successfully!');
+    } catch (e) {
+      SnackbarUtils.showMessage('Employee updated failed!');
+    }
   }
 }
 

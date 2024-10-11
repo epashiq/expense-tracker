@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/controller/provider/add_expenses_provider.dart';
 import 'package:expense_tracker/view/pages/dash_board_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,11 @@ class _MyWidgetState extends State<ShowExpensePage> {
   @override
   Widget build(BuildContext context) {
     final addExpenseProvider = Provider.of<AddExpensesProvider>(context);
-
+    final instance = FirebaseFirestore.instance
+        .collection('user')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection('Expense')
+        .snapshots();
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Expenses'),
@@ -35,7 +40,7 @@ class _MyWidgetState extends State<ShowExpensePage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('Expense').snapshots(),
+          stream: instance,
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
