@@ -72,7 +72,7 @@ class AuthProvider with ChangeNotifier {
     await GoogleSignIn().signOut();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('email');
+    await prefs.remove('user');
 
     Navigator.pushReplacement(
       context,

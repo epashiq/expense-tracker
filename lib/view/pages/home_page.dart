@@ -1,4 +1,5 @@
 import 'package:expense_tracker/controller/provider/add_expenses_provider.dart';
+import 'package:expense_tracker/controller/provider/auth_provider.dart';
 import 'package:expense_tracker/view/pages/show_expense_page.dart';
 import 'package:expense_tracker/view/widgets/add_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,18 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final addExpenseProvider = Provider.of<AddExpensesProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: const Color(0XFFfafafaff),
       appBar: AppBar(
         title: const Text('Daily Expenses'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                authProvider.logout(context);
+              },
+              icon: Icon(Icons.logout))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
