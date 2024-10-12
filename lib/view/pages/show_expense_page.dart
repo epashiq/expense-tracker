@@ -12,7 +12,22 @@ class ShowExpensePage extends StatefulWidget {
   State<ShowExpensePage> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<ShowExpensePage> {
+class _MyWidgetState extends State<ShowExpensePage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 800));
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final addExpenseProvider = Provider.of<AddExpensesProvider>(context);
@@ -64,71 +79,83 @@ class _MyWidgetState extends State<ShowExpensePage> {
                 itemBuilder: (context, index) {
                   final exp =
                       snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Type: ${exp['type'] ?? 'N/A'}',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueGrey,
-                            ),
+                  final animation =
+                      Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+                          .animate(CurvedAnimation(
+                              parent: controller, curve: Curves.easeInOut));
+                  controller.forward();
+                  return SlideTransition(
+                      position: animation,
+                      child: FadeTransition(
+                        opacity: controller,
+                        child: Card(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Category: ${exp['category'] ?? 'N/A'}',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Amount: \$${(exp['amount'] ?? 0.0).toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Date: ${exp['date'] ?? 'N/A'}',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: PopupMenuButton<String>(
-                              icon: const Icon(Icons.more_vert),
-                              onSelected: (value) {
-                                if (value == 'update') {
-                                } else if (value == 'delete') {
-                                  addExpenseProvider.deleteExpense(
-                                      context, snapshot.data!.docs[index].id);
-                                }
-                              },
-                              itemBuilder: (context) {
-                                return [
-                                  const PopupMenuItem<String>(
-                                    value: 'update',
-                                    child: Text('Update'),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Type: ${exp['type'] ?? 'N/A'}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blueGrey,
                                   ),
-                                  const PopupMenuItem<String>(
-                                      value: 'delete', child: Text('Delete')),
-                                ];
-                              },
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Category: ${exp['category'] ?? 'N/A'}',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Amount: \$${(exp['amount'] ?? 0.0).toStringAsFixed(2)}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Date: ${exp['date'] ?? 'N/A'}',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: PopupMenuButton<String>(
+                                    icon: const Icon(Icons.more_vert),
+                                    onSelected: (value) {
+                                      if (value == 'update') {
+                                      } else if (value == 'delete') {
+                                        addExpenseProvider.deleteExpense(
+                                            context,
+                                            snapshot.data!.docs[index].id);
+                                      }
+                                    },
+                                    itemBuilder: (context) {
+                                      return [
+                                        const PopupMenuItem<String>(
+                                          value: 'update',
+                                          child: Text('Update'),
+                                        ),
+                                        const PopupMenuItem<String>(
+                                            value: 'delete',
+                                            child: Text('Delete')),
+                                      ];
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
+                          ),
+                        ),
+                      ));
                 },
               );
             }
