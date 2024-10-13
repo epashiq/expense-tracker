@@ -1,6 +1,5 @@
-
-
 import 'package:expense_tracker/controller/provider/auth_provider.dart';
+import 'package:expense_tracker/view/pages/login_page.dart';
 import 'package:expense_tracker/view/widgets/submit_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -94,6 +93,11 @@ class _SignUpPageState extends State<SignUpPage> {
               onTap: () {
                 authProvider.signUp(emailController.text,
                     passwordController.text, context, nameController.text);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ));
               },
               emailController: emailController,
               passController: passwordController,

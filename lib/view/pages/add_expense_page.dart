@@ -142,13 +142,18 @@ class _AddExpensePageState extends State<AddExpensePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Navigator.push(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => const ShowExpensePage(),
-            ));
-      }),
+            ),
+          );
+        },
+        tooltip: 'Show expenses',
+        child: const Icon(Icons.receipt_long),
+      ),
     );
   }
 }
