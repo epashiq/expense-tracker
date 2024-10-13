@@ -95,14 +95,31 @@ class AddExpensesProvider with ChangeNotifier {
     }
   }
 
-  Future<void> deleteExpense(BuildContext context, String documentId) async {
+  // Future<void> deleteExpense(BuildContext context, String documentId) async {
+  //   try {
+  //     FirebaseFirestore.instance.collection('Expense').doc(documentId).delete();
+  //     SnackbarUtils.showMessage('expense deleted');
+  //   } catch (e) {
+  //     SnackbarUtils.showMessage('expense deleted failed');
+  //   }
+  //   notifyListeners();
+  // }
+  Future<void> deleteExpense(BuildContext context, String expenseId) async {
     try {
-      FirebaseFirestore.instance.collection('Expense').doc(documentId).delete();
-      SnackbarUtils.showMessage('expense deleted');
-    } catch (e) {
-      SnackbarUtils.showMessage('expense deleted failed');
+      final userUid = FirebaseAuth.instance.currentUser?.uid;
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(userUid)
+          .collection('Expense')
+          .doc(expenseId)
+          .delete();
+      notifyListeners();
+    } catch (error) {
+      // Handle error (e.g., show a snackbar)
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete expense: $error')),
+      );
     }
-    notifyListeners();
   }
 
   // Future<void> editExpense(String documentId) async {
@@ -139,8 +156,7 @@ class AddExpensesProvider with ChangeNotifier {
       'type': newType,
       'category': newCategory,
       'amount': newAmount,
-      'date':
-          DateTime.now().toIso8601String() 
+      'date': DateTime.now().toIso8601String()
     }).then((_) {
       log('Expense updated successfully');
     }).catchError((error) {

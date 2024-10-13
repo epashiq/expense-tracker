@@ -5,6 +5,7 @@ import 'package:expense_tracker/view/pages/edit_expense_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class ShowExpensePage extends StatefulWidget {
   const ShowExpensePage({super.key});
@@ -130,28 +131,28 @@ class _MyWidgetState extends State<ShowExpensePage>
         backgroundColor: Colors.blueAccent,
         actions: [
           IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DashboardPage(),
-                    ));
-              },
-              icon: const Icon(Icons.dashboard))
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const DashboardPage()),
+              );
+            },
+            icon: const Icon(Icons.dashboard),
+          )
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: StreamBuilder(
+        child: StreamBuilder<QuerySnapshot>(
           stream: _getFilteredExpenses(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return const Center(
+              return Center(
                 child: Text(
-                  'Error retrieving expenses!',
-                  style: TextStyle(fontSize: 18, color: Colors.red),
+                  'Error retrieving expenses: ${snapshot.error}',
+                  style: const TextStyle(fontSize: 18, color: Colors.red),
                 ),
               );
             } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -167,97 +168,114 @@ class _MyWidgetState extends State<ShowExpensePage>
                 itemBuilder: (context, index) {
                   final exp =
                       snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  final animation =
-                      Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
-                          .animate(CurvedAnimation(
-                              parent: controller, curve: Curves.easeInOut));
-                  controller.forward();
-                  return SlideTransition(
-                      position: animation,
-                      child: FadeTransition(
-                        opacity: controller,
-                        child: Card(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Type: ${exp['type'] ?? 'N/A'}',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blueGrey,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Category: ${exp['category'] ?? 'N/A'}',
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Amount: \$${(exp['amount'] ?? 0.0).toStringAsFixed(2)}',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Date: ${exp['date'] ?? 'N/A'}',
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: PopupMenuButton<String>(
-                                    icon: const Icon(Icons.more_vert),
-                                    onSelected: (value) {
-                                      if (value == 'update') {
-                                        addExpenseProvider.updateExpense(
-                                            snapshot.data!.docs[index].id,
-                                            exp['type'],
-                                            exp['category'],
-                                            exp['amount']);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EditExpensePage(
-                                                      expenseId: snapshot
-                                                          .data!.docs[index].id,
-                                                      expenseData: exp),
-                                            ));
-                                      } else if (value == 'delete') {
-                                        addExpenseProvider.deleteExpense(
-                                            context,
-                                            snapshot.data!.docs[index].id);
-                                      }
-                                    },
-                                    itemBuilder: (context) {
-                                      return [
-                                        const PopupMenuItem<String>(
-                                          value: 'update',
-                                          child: Text('Update'),
-                                        ),
-                                        const PopupMenuItem<String>(
-                                            value: 'delete',
-                                            child: Text('Delete')),
-                                      ];
-                                    },
-                                  ),
-                                )
-                              ],
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Type: ${exp['type'] ?? 'N/A'}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blueGrey,
                             ),
                           ),
-                        ),
-                      ));
+                          const SizedBox(height: 8),
+                          Text(
+                            'Category: ${exp['category'] ?? 'N/A'}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Amount: \$${(exp['amount'] ?? 0.0).toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Date: ${DateFormat.yMMMd().format(DateTime.parse(exp['date'])) ?? 'N/A'}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: PopupMenuButton<String>(
+                              icon: const Icon(Icons.more_vert),
+                              onSelected: (value) async {
+                                if (value == 'update') {
+                                  addExpenseProvider.updateExpense(
+                                      snapshot.data!.docs[index].id,
+                                      exp['type'],
+                                      exp['category'],
+                                      exp['amount']);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditExpensePage(
+                                        expenseId:
+                                            snapshot.data!.docs[index].id,
+                                        expenseData: exp,
+                                      ),
+                                    ),
+                                  );
+                                } else if (value == 'delete') {
+                                  bool confirm = await showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text('Confirm Deletion'),
+                                          content: const Text(
+                                              'Are you sure you want to delete this expense?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context)
+                                                      .pop(true),
+                                              child: const Text('Yes'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context)
+                                                      .pop(false),
+                                              child: const Text('No'),
+                                            ),
+                                          ],
+                                        ),
+                                      ) ??
+                                      false;
+
+                                  if (confirm) {
+                                    addExpenseProvider.deleteExpense(
+                                        context, snapshot.data!.docs[index].id);
+                                  }
+                                }
+                              },
+                              itemBuilder: (context) {
+                                return [
+                                  const PopupMenuItem<String>(
+                                    value: 'update',
+                                    child: Text('Update'),
+                                  ),
+                                  const PopupMenuItem<String>(
+                                    value: 'delete',
+                                    child: Text('Delete'),
+                                  ),
+                                ];
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
                 },
               );
             }
