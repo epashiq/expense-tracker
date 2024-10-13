@@ -1,7 +1,7 @@
 import 'package:expense_tracker/controller/provider/add_expenses_provider.dart';
 import 'package:expense_tracker/controller/provider/auth_provider.dart';
 import 'package:expense_tracker/firebase_options.dart';
-import 'package:expense_tracker/view/pages/home_page.dart';
+import 'package:expense_tracker/view/pages/add_expense_page.dart';
 import 'package:expense_tracker/view/pages/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
               );
             } else {
               if (snapshot.hasData && snapshot.data == true) {
-                return const HomePage();
+                return const AddExpensePage();
               } else {
                 return const LoginPage();
               }

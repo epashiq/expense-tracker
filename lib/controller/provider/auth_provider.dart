@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/utils/snackbar_utils.dart';
-import 'package:expense_tracker/view/pages/home_page.dart';
+import 'package:expense_tracker/view/pages/add_expense_page.dart';
 import 'package:expense_tracker/view/pages/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class AuthProvider with ChangeNotifier {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const HomePage(),
+              builder: (context) => const AddExpensePage(),
             ));
       }
     } catch (e) {

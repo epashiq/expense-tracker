@@ -1,5 +1,5 @@
 import 'package:expense_tracker/controller/provider/auth_provider.dart';
-import 'package:expense_tracker/view/pages/home_page.dart';
+import 'package:expense_tracker/view/pages/add_expense_page.dart';
 import 'package:expense_tracker/view/pages/sign_up_page.dart';
 import 'package:expense_tracker/view/widgets/submit_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const HomePage(),
+                      builder: (context) => const AddExpensePage(),
                     ));
               },
               icon: Image.network(

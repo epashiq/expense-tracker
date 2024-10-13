@@ -5,14 +5,14 @@ import 'package:expense_tracker/view/widgets/add_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class AddExpensePage extends StatefulWidget {
+  const AddExpensePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<AddExpensePage> createState() => _AddExpensePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _AddExpensePageState extends State<AddExpensePage> {
   String? typeValue;
   String? categoryValue;
   @override
@@ -142,6 +142,13 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ShowExpensePage(),
+            ));
+      }),
     );
   }
 }
