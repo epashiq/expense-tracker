@@ -1,5 +1,6 @@
 import 'package:expense_tracker/controller/provider/add_expenses_provider.dart';
 import 'package:expense_tracker/controller/provider/auth_provider.dart';
+import 'package:expense_tracker/controller/provider/theme_provider.dart';
 import 'package:expense_tracker/view/pages/show_expense_page.dart';
 import 'package:expense_tracker/view/widgets/add_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,8 @@ class _AddExpensePageState extends State<AddExpensePage> {
   Widget build(BuildContext context) {
     final addExpenseProvider = Provider.of<AddExpensesProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final currentTheme = Theme.of(context);
     return Scaffold(
       backgroundColor: const Color(0XFFfafafaff),
       appBar: AppBar(
@@ -28,7 +31,14 @@ class _AddExpensePageState extends State<AddExpensePage> {
               onPressed: () {
                 authProvider.logout(context);
               },
-              icon: Icon(Icons.logout))
+              icon: const Icon(Icons.logout)),
+          IconButton(
+            icon: Icon(
+                themeProvider.isDarkmode ? Icons.dark_mode : Icons.light_mode),
+            onPressed: () {
+              themeProvider.toggleTheme();
+            },
+          )
         ],
       ),
       body: Padding(
@@ -38,7 +48,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
             DropdownButtonFormField(
               decoration: InputDecoration(
                 filled: true,
-                fillColor: const Color(0XFFffffffff),
+                fillColor: currentTheme.colorScheme.surface,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
                   borderSide: BorderSide.none,
@@ -66,7 +76,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
             DropdownButtonFormField(
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: const Color(0XFFffffffff),
+                  fillColor: currentTheme.colorScheme.surface,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: BorderSide.none,
@@ -95,7 +105,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: const Color(0XFFffffffff),
+                fillColor: currentTheme.colorScheme.surface,
                 prefixIcon: const Icon(Icons.attach_money),
                 hintText: 'Amount',
                 border: OutlineInputBorder(
@@ -111,7 +121,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
               controller: addExpenseProvider.dateController,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: const Color(0XFFffffffff),
+                fillColor: currentTheme.colorScheme.surface,
                 hintText: 'Date',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),

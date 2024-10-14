@@ -81,6 +81,7 @@ class _EditExpensePageState extends State<EditExpensePage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Theme.of(context);
     return Scaffold(
       backgroundColor: const Color(0XFFfafafaff),
       appBar: AppBar(
@@ -100,7 +101,7 @@ class _EditExpensePageState extends State<EditExpensePage> {
               controller: typeController,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: const Color(0XFFffffffff),
+                fillColor: currentTheme.colorScheme.surface,
                 labelText: 'Expense Type',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
@@ -113,7 +114,7 @@ class _EditExpensePageState extends State<EditExpensePage> {
               controller: categoryController,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: const Color(0XFFffffffff),
+                fillColor: currentTheme.colorScheme.surface,
                 labelText: 'Category',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
@@ -126,7 +127,7 @@ class _EditExpensePageState extends State<EditExpensePage> {
               controller: amountController,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: const Color(0XFFffffffff),
+                fillColor: currentTheme.colorScheme.surface,
                 labelText: 'Amount',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
