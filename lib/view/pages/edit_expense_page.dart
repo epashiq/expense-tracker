@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'dart:developer';
 
 class EditExpensePage extends StatefulWidget {
-  final String expenseId; // ID of the expense to edit
-  final Map<String, dynamic> expenseData; // The data of the expense
+  final String expenseId; 
+  final Map<String, dynamic> expenseData; 
 
   const EditExpensePage({
     Key? key,

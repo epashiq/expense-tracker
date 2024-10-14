@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/controller/provider/add_expenses_provider.dart';
 import 'package:expense_tracker/view/pages/dash_board_page.dart';
 import 'package:expense_tracker/view/pages/edit_expense_page.dart';
+import 'package:expense_tracker/view/widgets/bottom_sheet_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,71 +37,29 @@ class _MyWidgetState extends State<ShowExpensePage>
   }
 
   Future<void> _openFilterModal() async {
-    await showModalBottomSheet(
+    showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  const Text('Category:'),
-                  const SizedBox(width: 10),
-                  DropdownButton<String>(
-                    value: selectedCategory,
-                    items: categories.map((String category) {
-                      return DropdownMenuItem<String>(
-                        value: category,
-                        child: Text(category),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedCategory = newValue!;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  const Text('Date Range:'),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () async {
-                      DateTimeRange? picked = await showDateRangePicker(
-                        context: context,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime.now(),
-                      );
-                      if (picked != null) {
-                        setState(() {
-                          selectedDateRange = picked;
-                        });
-                      }
-                    },
-                    child: const Text('Select Date Range'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  setState(() {});
-                },
-                child: const Text('Apply Filters'),
-              ),
-            ],
-          ),
+        return FilterModal(
+          selectedCategory: selectedCategory,
+          categories: categories,
+          onCategorySelected: (newCategory) {
+            setState(() {
+              selectedCategory = newCategory;
+            });
+          },
+          onDateRangeSelected: (newDateRange) {
+            setState(() {
+              selectedDateRange = newDateRange;
+            });
+          },
+          onApplyFilters: () {
+            setState(() {}); 
+          },
         );
       },
     );
   }
-
   Stream<QuerySnapshot> _getFilteredExpenses() {
     final userUid = FirebaseAuth.instance.currentUser?.uid;
     Query query = FirebaseFirestore.instance

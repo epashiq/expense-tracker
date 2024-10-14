@@ -3,6 +3,8 @@ import 'package:expense_tracker/controller/provider/auth_provider.dart';
 import 'package:expense_tracker/controller/provider/theme_provider.dart';
 import 'package:expense_tracker/view/pages/show_expense_page.dart';
 import 'package:expense_tracker/view/widgets/add_button_widget.dart';
+import 'package:expense_tracker/view/widgets/custom_date_field.dart';
+import 'package:expense_tracker/view/widgets/custom_textfield_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +14,6 @@ class AddExpensePage extends StatefulWidget {
   @override
   State<AddExpensePage> createState() => _AddExpensePageState();
 }
-
 class _AddExpensePageState extends State<AddExpensePage> {
   String? typeValue;
   String? categoryValue;
@@ -100,39 +101,20 @@ class _AddExpensePageState extends State<AddExpensePage> {
             const SizedBox(
               height: 20,
             ),
-            TextFormField(
-              controller: addExpenseProvider.amountController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: currentTheme.colorScheme.surface,
-                prefixIcon: const Icon(Icons.attach_money),
+            CustomTextField(
+                controller: addExpenseProvider.amountController,
                 hintText: 'Amount',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
+                prefixIcon: Icons.attach_money),
             const SizedBox(
               height: 20,
             ),
-            TextFormField(
-              controller: addExpenseProvider.dateController,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: currentTheme.colorScheme.surface,
+            CustomDateField(
+                controller: addExpenseProvider.dateController,
                 hintText: 'Date',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide.none,
-                ),
-                prefixIcon: const Icon(Icons.calendar_month),
-              ),
-              onTap: () {
-                addExpenseProvider.setDate(context);
-              },
-            ),
+                prefixIcon: Icons.calendar_month,
+                onTap: () {
+                  addExpenseProvider.setDate(context);
+                }),
             const SizedBox(
               height: 20,
             ),
