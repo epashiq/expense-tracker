@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
             ElevatedButton.icon(
               onPressed: () {
                 authProvider.signInWithGoogle();
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const AddExpensePage(),
