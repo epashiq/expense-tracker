@@ -223,8 +223,11 @@ class _DashboardPageState extends State<DashboardPage> {
     fetchExpenses();
   }
 
-  Future<void> fetchExpenses(
-      {String? category, DateTime? startDate, DateTime? endDate}) async {
+  Future<void> fetchExpenses({
+    String? category,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     Query query = FirebaseFirestore.instance
         .collection('user')
         .doc(FirebaseAuth.instance.currentUser?.uid)
@@ -234,8 +237,11 @@ class _DashboardPageState extends State<DashboardPage> {
       query = query.where('category', isEqualTo: category);
     }
     if (startDate != null && endDate != null) {
-      query = query.where('date',
-          isGreaterThanOrEqualTo: startDate, isLessThanOrEqualTo: endDate);
+      query = query.where(
+        'date',
+        isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+      );
     }
 
     QuerySnapshot querySnapshot = await query.get();
@@ -252,6 +258,7 @@ class _DashboardPageState extends State<DashboardPage> {
           (categoryTotals[category] ?? 0.0) + (exp['amount'] ?? 0.0);
     }
 
+    // Build pie chart data
     pieChartData = categoryTotals.entries.map((entry) {
       return PieChartSectionData(
         color: _getColor(entry.key),
@@ -297,9 +304,10 @@ class _DashboardPageState extends State<DashboardPage> {
     if (category != null) {
       selectedCategory = category;
       fetchExpenses(
-          category: selectedCategory,
-          startDate: dateRange?.start,
-          endDate: dateRange?.end);
+        category: selectedCategory,
+        startDate: dateRange?.start,
+        endDate: dateRange?.end,
+      );
     }
   }
 
@@ -312,11 +320,18 @@ class _DashboardPageState extends State<DashboardPage> {
     );
 
     if (picked != null) {
-      dateRange = picked;
-      fetchExpenses(
-          category: selectedCategory,
-          startDate: dateRange?.start,
-          endDate: dateRange?.end);
+      setState(() {
+        dateRange = picked; // Store the selected date range
+        print(
+            'Selected date range: ${dateRange?.start} to ${dateRange?.end}'); // Debug statement
+      });
+
+      // Fetch expenses with the new date range
+      await fetchExpenses(
+        category: selectedCategory,
+        startDate: dateRange?.start,
+        endDate: dateRange?.end,
+      );
     }
   }
 
@@ -334,25 +349,38 @@ class _DashboardPageState extends State<DashboardPage> {
                 builder: (context) {
                   return AlertDialog(
                     title: const Text('Filters'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        DropdownButton<String>(
-                          value: selectedCategory,
-                          onChanged: _selectCategory,
-                          items: ['All', 'Food', 'Groceries', 'Entertainment']
-                              .map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                        ElevatedButton(
-                          onPressed: _selectDateRange,
-                          child: const Text('Select Date Range'),
-                        ),
-                      ],
+                    content: SizedBox(
+                      height: 200,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          DropdownButton<String>(
+                            value: selectedCategory,
+                            onChanged: _selectCategory,
+                            items: ['All', 'Food', 'Groceries', 'Entertainment']
+                                .map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: _selectDateRange,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            child: const Text(
+                              'Select Date Range',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     actions: [
                       TextButton(
@@ -386,7 +414,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         centerSpaceRadius: 40,
                       ),
                     )
-                  : const Center(child: CircularProgressIndicator()),
+                  : const Center(child: Text('No expenses available')),
             ),
             const SizedBox(height: 20),
             const Text(
