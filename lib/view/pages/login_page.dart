@@ -86,12 +86,12 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: () {
-                authProvider.signInWithGoogle();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddExpensePage(),
-                    ));
+                authProvider.signInWithGoogle(context);
+                // Navigator.pushReplacement(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => const AddExpensePage(),
+                //     ));
               },
               icon: Image.network(
                 'https://www.freepnglogos.com/uploads/new-google-logo-transparent--14.png',

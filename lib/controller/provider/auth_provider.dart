@@ -52,14 +52,23 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<UserCredential> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  Future<UserCredential> signInWithGoogle(BuildContext context) async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-    final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+      final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AddExpensePage(),
+          ));
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   Future<String?> getUserEmail() async {

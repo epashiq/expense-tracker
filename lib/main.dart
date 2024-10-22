@@ -46,6 +46,7 @@
 
 import 'package:expense_tracker/controller/provider/add_expenses_provider.dart';
 import 'package:expense_tracker/controller/provider/auth_provider.dart';
+import 'package:expense_tracker/controller/provider/chart_provider.dart';
 import 'package:expense_tracker/controller/provider/theme_provider.dart';
 import 'package:expense_tracker/firebase_options.dart';
 import 'package:expense_tracker/view/pages/splash_screen.dart';
@@ -77,6 +78,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AddExpensesProvider()),
         ChangeNotifierProvider(
             create: (_) => ThemeProvider()), // Added ThemeProvider here
+                    ChangeNotifierProvider(create: (_) => ChartProvider()),
+
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

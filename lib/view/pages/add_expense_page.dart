@@ -14,6 +14,7 @@ class AddExpensePage extends StatefulWidget {
   @override
   State<AddExpensePage> createState() => _AddExpensePageState();
 }
+
 class _AddExpensePageState extends State<AddExpensePage> {
   String? typeValue;
   String? categoryValue;
