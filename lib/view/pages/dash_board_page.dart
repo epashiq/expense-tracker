@@ -575,7 +575,6 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
 
-
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
@@ -693,10 +692,9 @@ class DashboardPage extends StatelessWidget {
                     child: ListView.builder(
                       itemCount: chartProvider.categoryTotals.length,
                       itemBuilder: (context, index) {
-                        String category = chartProvider.categoryTotals.keys
-                            .elementAt(index);
-                        double amount =
-                            chartProvider.categoryTotals[category]!;
+                        String category =
+                            chartProvider.categoryTotals.keys.elementAt(index);
+                        double amount = chartProvider.categoryTotals[category]!;
 
                         return Card(
                           elevation: 3,
