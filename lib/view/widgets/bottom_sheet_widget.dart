@@ -97,8 +97,9 @@
 //     );
 //   }
 // }
-
+import 'package:expense_tracker/controller/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FilterModal extends StatefulWidget {
   final String selectedCategory;
@@ -135,9 +136,14 @@ class _FilterModalState extends State<FilterModal> {
 
   @override
   Widget build(BuildContext context) {
+    // Accessing the current theme mode
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.isDarkmode;
+    final theme = Theme.of(context);
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? theme.cardColor : Colors.white,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -154,7 +160,7 @@ class _FilterModalState extends State<FilterModal> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildCategorySelector(),
+          _buildCategorySelector(theme),
           const SizedBox(height: 20),
           _buildDateRangeSelector(),
           const SizedBox(height: 20),
@@ -164,12 +170,11 @@ class _FilterModalState extends State<FilterModal> {
     );
   }
 
-  Widget _buildCategorySelector() {
+  Widget _buildCategorySelector(ThemeData theme) {
     return Row(
       children: [
-        const Text(
+        Text(
           'Category:',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(width: 10),
         Expanded(
@@ -177,7 +182,10 @@ class _FilterModalState extends State<FilterModal> {
             value: selectedCategory,
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.grey[200],
+              fillColor: theme.inputDecorationTheme.fillColor ??
+                  (theme.brightness == Brightness.dark
+                      ? Colors.grey[700]
+                      : Colors.grey[200]),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide.none,
@@ -216,13 +224,21 @@ class _FilterModalState extends State<FilterModal> {
               firstDate: DateTime(2020),
               lastDate: DateTime.now(),
               builder: (context, child) {
+                final themeProvider = Provider.of<ThemeProvider>(context);
+                final isDarkMode = themeProvider.isDarkmode;
+
                 return Theme(
                   data: ThemeData.light().copyWith(
-                    colorScheme: const ColorScheme.light(
-                      primary: Colors.deepPurpleAccent,
-                    ),
+                    colorScheme: isDarkMode
+                        ? const ColorScheme.dark(
+                            primary: Colors.deepPurpleAccent,
+                          )
+                        : const ColorScheme.light(
+                            primary: Colors.deepPurpleAccent,
+                          ),
                     buttonTheme: const ButtonThemeData(
-                        textTheme: ButtonTextTheme.primary),
+                      textTheme: ButtonTextTheme.primary,
+                    ),
                   ),
                   child: child!,
                 );

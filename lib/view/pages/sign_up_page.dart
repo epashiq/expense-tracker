@@ -98,6 +98,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     MaterialPageRoute(
                       builder: (context) => const LoginPage(),
                     ));
+                emailController.dispose();
+                passwordController.dispose();
+                nameController.dispose();
               },
               emailController: emailController,
               passController: passwordController,

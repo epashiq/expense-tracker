@@ -241,11 +241,12 @@
 //     );
 //   }
 // }
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/controller/provider/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:provider/provider.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -368,6 +369,10 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.isDarkmode;
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Dashboard'),
@@ -400,7 +405,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           ElevatedButton(
                             onPressed: _selectDateRange,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange,
+                              backgroundColor: theme.colorScheme.secondary,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
@@ -432,7 +437,7 @@ class _DashboardPageState extends State<DashboardPage> {
           children: [
             Text(
               'Total Expenses: \$${totalExpenses.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -440,20 +445,20 @@ class _DashboardPageState extends State<DashboardPage> {
                   ? BarChart(
                       BarChartData(
                         barGroups: barChartData,
-                        borderData: FlBorderData(
-                            show: false), // Removes border around the chart
+                        borderData: FlBorderData(show: false),
                         titlesData: FlTitlesData(
                           leftTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
-                              reservedSize:
-                                  40, // Allocate space for y-axis values
+                              reservedSize: 40,
                               getTitlesWidget: (double value, TitleMeta meta) {
                                 return Text(
-                                  '\$${value.toStringAsFixed(0)}', // Format the y-axis titles
-                                  style: const TextStyle(
+                                  '\$${value.toStringAsFixed(0)}',
+                                  style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.black,
+                                    color: isDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 );
                               },
@@ -462,21 +467,22 @@ class _DashboardPageState extends State<DashboardPage> {
                           bottomTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
-                              reservedSize: 50, // Space for the bottom axis
+                              reservedSize: 50,
                               getTitlesWidget: (double value, TitleMeta meta) {
                                 String category = categoryTotals.keys
                                     .elementAt(value.toInt());
                                 return Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
                                   child: Transform.rotate(
-                                    angle:
-                                        -0.45, // Rotate the titles for better fit
+                                    angle: -0.45,
                                     child: Text(
                                       category,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.black,
+                                        color: isDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
                                       ),
                                     ),
                                   ),
@@ -486,23 +492,24 @@ class _DashboardPageState extends State<DashboardPage> {
                           ),
                         ),
                         gridData: FlGridData(
-                          show: true, // Enable grid lines
+                          show: true,
                           drawVerticalLine: false,
-                          horizontalInterval: 50, // Define y-axis intervals
+                          horizontalInterval: 50,
                           getDrawingHorizontalLine: (value) {
                             return FlLine(
-                              color: Colors.grey[300]!,
+                              color: isDarkMode
+                                  ? Colors.grey[800]!
+                                  : Colors.grey[300]!,
                               strokeWidth: 1,
                             );
                           },
                         ),
-                        barTouchData: BarTouchData(
-                            enabled: true), // Enable touch interaction
+                        barTouchData: BarTouchData(enabled: true),
                         maxY: categoryTotals.values.isNotEmpty
                             ? categoryTotals.values
                                     .reduce((a, b) => a > b ? a : b) +
                                 20
-                            : 100, // Adjust max y-value to scale with data
+                            : 100,
                       ),
                     )
                   : const Center(child: Text('No expenses available')),
@@ -510,13 +517,12 @@ class _DashboardPageState extends State<DashboardPage> {
             const SizedBox(height: 20),
             const Text(
               'Spending Summary',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 10),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(
-                    8.0), // Adds padding around the ListView
+                padding: const EdgeInsets.all(8.0),
                 child: ListView.builder(
                   itemCount: categoryTotals.length,
                   itemBuilder: (context, index) {
@@ -524,277 +530,34 @@ class _DashboardPageState extends State<DashboardPage> {
                     double amount = categoryTotals[category]!;
 
                     return Card(
-                      elevation: 3, // Adds shadow to the ListTile
+                      elevation: 3,
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(20), // Rounded corners
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8.0), // Space between tiles
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      color: isDarkMode
+                          ? Colors.grey[850]
+                          : Colors.white, // Adapt to dark mode
                       child: ListTile(
-                        leading: const Icon(Icons
-                            .category_rounded), // Adds category-specific icon
+                        leading: Icon(
+                          Icons.category_rounded,
+                          color: isDarkMode ? Colors.white : Colors.black,
+                        ),
                         title: Text(
                           category,
-                          style: const TextStyle(
-                            fontSize: 18, // Increased font size for category
-                            fontWeight: FontWeight.bold, // Bold text for title
-                          ),
                         ),
                         trailing: Text(
                           '\$${amount.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight:
-                                FontWeight.w600, // Semi-bold for the amount
-                            color: Colors
-                                .green, // Color indicating a positive amount
-                          ),
-                        ),
-                        tileColor:
-                            Colors.white, // Background color for the tile
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, // Padding inside the ListTile
-                          vertical: 8.0,
                         ),
                       ),
                     );
                   },
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-// import 'package:expense_tracker/controller/provider/chart_provider.dart';
-// import 'package:flutter/material.dart';
-// import 'package:fl_chart/fl_chart.dart';
-// import 'package:provider/provider.dart';
-
-// class DashboardPage extends StatelessWidget {
-//   const DashboardPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Expense Dashboard'),
-//         actions: [
-//           IconButton(
-//             icon: const Icon(Icons.filter_list),
-//             onPressed: () {
-//               showDialog(
-//                 context: context,
-//                 builder: (context) {
-//                   return FilterDialog();
-//                 },
-//               );
-//             },
-//           ),
-//         ],
-//       ),
-//       body: Consumer<ChartProvider>(
-//         builder: (context, chartProvider, child) {
-//           return Padding(
-//             padding: const EdgeInsets.all(16.0),
-//             child: Column(
-//               children: [
-//                 Text(
-//                   'Total Expenses: \$${chartProvider.totalExpenses.toStringAsFixed(2)}',
-//                   style: const TextStyle(
-//                       fontSize: 24, fontWeight: FontWeight.bold),
-//                 ),
-//                 const SizedBox(height: 20),
-//                 Expanded(
-//                   child: chartProvider.barChartData.isNotEmpty
-//                       ? BarChart(
-//                           BarChartData(
-//                             barGroups: chartProvider.barChartData,
-//                             borderData: FlBorderData(show: false),
-//                             titlesData: FlTitlesData(
-//                               leftTitles: AxisTitles(
-//                                 sideTitles: SideTitles(
-//                                   showTitles: true,
-//                                   reservedSize: 40,
-//                                   getTitlesWidget:
-//                                       (double value, TitleMeta meta) {
-//                                     return Text(
-//                                       '\$${value.toStringAsFixed(0)}',
-//                                       style: const TextStyle(
-//                                         fontSize: 12,
-//                                         color: Colors.black,
-//                                       ),
-//                                     );
-//                                   },
-//                                 ),
-//                               ),
-//                               bottomTitles: AxisTitles(
-//                                 sideTitles: SideTitles(
-//                                   showTitles: true,
-//                                   reservedSize: 50,
-//                                   getTitlesWidget:
-//                                       (double value, TitleMeta meta) {
-//                                     String category = chartProvider
-//                                         .categoryTotals.keys
-//                                         .elementAt(value.toInt());
-//                                     return Padding(
-//                                       padding: const EdgeInsets.only(top: 8.0),
-//                                       child: Transform.rotate(
-//                                         angle: -0.45,
-//                                         child: Text(
-//                                           category,
-//                                           style: const TextStyle(
-//                                             fontSize: 12,
-//                                             fontWeight: FontWeight.w500,
-//                                             color: Colors.black,
-//                                           ),
-//                                         ),
-//                                       ),
-//                                     );
-//                                   },
-//                                 ),
-//                               ),
-//                             ),
-//                             gridData: FlGridData(
-//                               show: true,
-//                               drawVerticalLine: false,
-//                               horizontalInterval: 50,
-//                               getDrawingHorizontalLine: (value) {
-//                                 return FlLine(
-//                                   color: Colors.grey[300]!,
-//                                   strokeWidth: 1,
-//                                 );
-//                               },
-//                             ),
-//                             barTouchData: BarTouchData(enabled: true),
-//                             maxY: chartProvider.categoryTotals.values.isNotEmpty
-//                                 ? chartProvider.categoryTotals.values
-//                                         .reduce((a, b) => a > b ? a : b) +
-//                                     20
-//                                 : 100,
-//                           ),
-//                         )
-//                       : const Center(child: Text('No expenses available')),
-//                 ),
-//                 const SizedBox(height: 20),
-//                 const Text(
-//                   'Spending Summary',
-//                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//                 ),
-//                 const SizedBox(height: 10),
-//                 Expanded(
-//                   child: Padding(
-//                     padding: const EdgeInsets.all(8.0),
-//                     child: ListView.builder(
-//                       itemCount: chartProvider.categoryTotals.length,
-//                       itemBuilder: (context, index) {
-//                         String category =
-//                             chartProvider.categoryTotals.keys.elementAt(index);
-//                         double amount = chartProvider.categoryTotals[category]!;
-
-//                         return Card(
-//                           elevation: 3,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(15),
-//                           ),
-//                           margin: const EdgeInsets.symmetric(vertical: 8.0),
-//                           child: ListTile(
-//                             leading: const Icon(Icons.category_rounded),
-//                             title: Text(
-//                               category,
-//                               style: const TextStyle(
-//                                 fontSize: 18,
-//                                 fontWeight: FontWeight.bold,
-//                               ),
-//                             ),
-//                             trailing: Text(
-//                               '\$${amount.toStringAsFixed(2)}',
-//                               style: const TextStyle(
-//                                 fontSize: 16,
-//                                 fontWeight: FontWeight.w600,
-//                                 color: Colors.green,
-//                               ),
-//                             ),
-//                           ),
-//                         );
-//                       },
-//                     ),
-//                   ),
-//                 )
-//               ],
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-
-// class FilterDialog extends StatelessWidget {
-//   const FilterDialog({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final chartProvider = Provider.of<ChartProvider>(context, listen: false);
-
-//     return AlertDialog(
-//       title: const Text('Filters'),
-//       content: SizedBox(
-//         height: 200,
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             DropdownButton<String>(
-//               value: chartProvider.selectedCategory,
-//               onChanged: (value) {
-//                 if (value != null) {
-//                   chartProvider.selectCategory(value);
-//                 }
-//               },
-//               items: ['All', 'Food', 'Groceries', 'Entertainment']
-//                   .map((String value) {
-//                 return DropdownMenuItem<String>(
-//                   value: value,
-//                   child: Text(value),
-//                 );
-//               }).toList(),
-//             ),
-//             const SizedBox(height: 16),
-//             ElevatedButton(
-//               onPressed: () async {
-//                 DateTimeRange? picked = await showDateRangePicker(
-//                   context: context,
-//                   initialDateRange: chartProvider.dateRange,
-//                   firstDate: DateTime(2020),
-//                   lastDate: DateTime.now(),
-//                 );
-//                 if (picked != null) {
-//                   chartProvider.selectDateRange(picked);
-//                 }
-//               },
-//               style: ElevatedButton.styleFrom(
-//                 backgroundColor: Colors.orange,
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(8),
-//                 ),
-//               ),
-//               child: const Text('Select Date Range'),
-//             ),
-//           ],
-//         ),
-//       ),
-//       actions: [
-//         TextButton(
-//           onPressed: () {
-//             Navigator.of(context).pop();
-//           },
-//           child: const Text('Close'),
-//         ),
-//       ],
-//     );
-//   }
-// }
