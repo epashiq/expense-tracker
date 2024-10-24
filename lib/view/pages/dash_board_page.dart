@@ -347,32 +347,32 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
-  void _selectDateRange() async {
-    DateTimeRange? picked = await showDateRangePicker(
-      context: context,
-      initialDateRange: dateRange,
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
-    );
+  // void _selectDateRange() async {
+  //   DateTimeRange? picked = await showDateRangePicker(
+  //     context: context,
+  //     initialDateRange: dateRange,
+  //     firstDate: DateTime(2020),
+  //     lastDate: DateTime.now(),
+  //   );
 
-    if (picked != null) {
-      setState(() {
-        dateRange = picked;
-      });
+  //   if (picked != null) {
+  //     setState(() {
+  //       dateRange = picked;
+  //     });
 
-      await fetchExpenses(
-        category: selectedCategory,
-        startDate: dateRange?.start,
-        endDate: dateRange?.end,
-      );
-    }
-  }
+  //     await fetchExpenses(
+  //       category: selectedCategory,
+  //       startDate: dateRange?.start,
+  //       endDate: dateRange?.end,
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDarkMode = themeProvider.isDarkmode;
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -403,19 +403,19 @@ class _DashboardPageState extends State<DashboardPage> {
                             }).toList(),
                           ),
                           const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: _selectDateRange,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: theme.colorScheme.secondary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                            ),
-                            child: const Text(
-                              'Select Date Range',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
+                          // ElevatedButton(
+                          //   onPressed: _selectDateRange,
+                          //   style: ElevatedButton.styleFrom(
+                          //     backgroundColor: theme.colorScheme.secondary,
+                          //     shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(15),
+                          //     ),
+                          //   ),
+                          //   child: const Text(
+                          //     'Select Date Range',
+                          //     style: TextStyle(color: Colors.white),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

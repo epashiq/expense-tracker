@@ -1,5 +1,4 @@
 import 'package:expense_tracker/controller/provider/auth_provider.dart';
-import 'package:expense_tracker/controller/provider/theme_provider.dart';
 import 'package:expense_tracker/view/pages/login_page.dart';
 import 'package:expense_tracker/view/widgets/submit_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,6 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final themeProvider = Provider.of<ThemeProvider>(context);
     final currentTheme = Theme.of(context);
     return Scaffold(
       backgroundColor: const Color(0XFFfafafa),
