@@ -146,6 +146,7 @@
 // }
 
 import 'package:expense_tracker/controller/provider/auth_provider.dart';
+import 'package:expense_tracker/controller/provider/theme_provider.dart';
 import 'package:expense_tracker/view/pages/sign_up_page.dart';
 import 'package:expense_tracker/view/widgets/submit_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -166,6 +167,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final currentTheme = Theme.of(context);
     return Scaffold(
       backgroundColor: const Color(0XFFfafafaff),
       body: Padding(
@@ -198,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: emailController,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: const Color(0XFFffffffff),
+                  fillColor: currentTheme.colorScheme.surface,
                   prefixIcon: const Icon(Icons.mail),
                   hintText: 'Email',
                   border: OutlineInputBorder(
@@ -225,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: true,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: const Color(0XFFffffffff),
+                  fillColor: currentTheme.colorScheme.surface,
                   prefixIcon: const Icon(Icons.lock),
                   hintText: 'Password',
                   border: OutlineInputBorder(
@@ -272,8 +275,9 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(fontSize: 15),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
+                  backgroundColor: currentTheme.colorScheme.surface,
+                  foregroundColor:
+                      themeProvider.isDarkmode ? Colors.white : Colors.black,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
                   shape: RoundedRectangleBorder(
