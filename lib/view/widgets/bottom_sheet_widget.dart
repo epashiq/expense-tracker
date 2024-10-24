@@ -97,6 +97,7 @@
 //     );
 //   }
 // }
+
 import 'package:expense_tracker/controller/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -228,18 +229,27 @@ class _FilterModalState extends State<FilterModal> {
                 final isDarkMode = themeProvider.isDarkmode;
 
                 return Theme(
-                  data: ThemeData.light().copyWith(
-                    colorScheme: isDarkMode
-                        ? const ColorScheme.dark(
-                            primary: Colors.deepPurpleAccent,
-                          )
-                        : const ColorScheme.light(
-                            primary: Colors.deepPurpleAccent,
+                  data: isDarkMode
+                      ? ThemeData.dark().copyWith(
+                          colorScheme: const ColorScheme.dark(
+                            primary: Colors.orange, // Header color
+                            onPrimary: Colors.white, // Header text color
+                            surface: Colors.grey, // Background color
+                            onSurface: Colors.white, // Text color
                           ),
-                    buttonTheme: const ButtonThemeData(
-                      textTheme: ButtonTextTheme.primary,
-                    ),
-                  ),
+                          dialogBackgroundColor:
+                              Colors.black, // Calendar background color
+                        )
+                      : ThemeData.light().copyWith(
+                          colorScheme: const ColorScheme.light(
+                            primary: Colors.deepPurple, // Header color
+                            onPrimary: Colors.white, // Header text color
+                            surface: Colors.white, // Background color
+                            onSurface: Colors.black, // Text color
+                          ),
+                          dialogBackgroundColor:
+                              Colors.white, // Calendar background color
+                        ),
                   child: child!,
                 );
               },

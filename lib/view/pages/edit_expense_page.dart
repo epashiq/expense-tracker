@@ -9,10 +9,10 @@ class EditExpensePage extends StatefulWidget {
   final Map<String, dynamic> expenseData; 
 
   const EditExpensePage({
-    Key? key,
+    super.key,
     required this.expenseId,
     required this.expenseData,
-  }) : super(key: key);
+  });
 
   @override
   _EditExpensePageState createState() => _EditExpensePageState();

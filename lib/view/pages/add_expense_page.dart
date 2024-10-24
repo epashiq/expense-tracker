@@ -27,6 +27,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
     return Scaffold(
       backgroundColor: const Color(0XFFfafafaff),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Daily Expenses'),
         actions: [
           IconButton(
@@ -127,7 +128,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ShowExpensePage(),
+                      builder: (context) => ShowExpensePage(),
                     ));
               },
               width: MediaQuery.of(context).size.width,
@@ -140,7 +141,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const ShowExpensePage(),
+              builder: (context) => ShowExpensePage(),
             ),
           );
         },

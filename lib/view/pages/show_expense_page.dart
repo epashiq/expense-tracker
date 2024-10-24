@@ -249,6 +249,8 @@
 //   }
 // }
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/controller/provider/add_expenses_provider.dart';
 import 'package:expense_tracker/controller/provider/theme_provider.dart';
@@ -304,6 +306,7 @@ class _ShowExpensePageState extends State<ShowExpensePage>
           onDateRangeSelected: (newDateRange) {
             setState(() {
               selectedDateRange = newDateRange;
+              log('${selectedDateRange = newDateRange}');
             });
           },
           onApplyFilters: () {
@@ -325,7 +328,7 @@ class _ShowExpensePageState extends State<ShowExpensePage>
       query = query.where('category', isEqualTo: selectedCategory);
     }
 
-    if (selectedDateRange != null) {
+    if (selectedDateRange == categories) {
       query = query.where('date',
           isGreaterThanOrEqualTo: selectedDateRange!.start.toIso8601String(),
           isLessThanOrEqualTo: selectedDateRange!.end.toIso8601String());
@@ -521,7 +524,9 @@ class _ShowExpensePageState extends State<ShowExpensePage>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _openFilterModal,
+        onPressed: () {
+          _openFilterModal();
+        },
         backgroundColor: Colors.orange,
         child: const Icon(Icons.filter_list, color: Colors.white),
       ),
